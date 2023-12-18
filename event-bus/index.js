@@ -7,17 +7,38 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.post('/events', (req,res) => {
+const events = [];
+
+app.get('/events',(req,res) => {
+  return res.send(events);
+})
+
+app.post('/events',async (req,res) => {
   const event = req.body;
-   axios.post('http://localhost:4000/events',event).catch(e => {
+  events.push(event);
+  try{
+    await axios.post('http://localhost:4000/events',event)
+  }catch(e){
     console.log(e.message);
-  })
-   axios.post('http://localhost:4001/events',event).catch(e => {
+  }
+  try{
+   await axios.post('http://localhost:4001/events',event)
+  }catch(e){
     console.log(e.message);
-  })
-   axios.post('http://localhost:4006/events',event).catch(e => {
+  }
+  try{
+   await axios.post('http://localhost:4006/events',event)
+  }catch(e){
     console.log(e.message);
-  })
+  }
+  try{
+    await  axios.post('http://localhost:4003/events',event)
+  }catch(e){
+    console.log(e.message);
+  }
+  
+
+
   res.status(200);
 })
 

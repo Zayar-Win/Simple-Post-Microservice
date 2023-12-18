@@ -11,6 +11,7 @@ const PostList = () => {
   useEffect(() => {
     fetchPosts();
   },[])
+  console.log(posts);
   return (
     <div className='mt-4 d-flex flex-row flex-wrap gap-3'>
       {

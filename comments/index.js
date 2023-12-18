@@ -28,9 +28,11 @@ app.post('/posts/:id/comments',async (req,res) => {
   await axios.post('http://localhost:4004/events',{
     type:'CommentCreated',
     data : {
-      id,body,postId
+      id,body,postId,
+      status:'pending'
     }
   })
+
 
   return res.status(201).send(comment);
 
@@ -43,8 +45,28 @@ app.get('/posts/:id/comments',(req,res) => {
   return res.send(comments || []);
 });
 
-app.post('/events',(req,res) => {
+app.post('/events',async(req,res) => {
   console.log('Comment Created Event');
+  const {type,data} = req.body;
+  if(type === 'CommentModerated'){
+    try{  
+      const comments = commentsByPostId[data.postId];
+      const comment = comments.find(comment => comment.id === data.id);
+      comment.status = data.status;
+      comment.body = data.body;
+      await axios.post('http://localhost:4004/events',{
+        type : 'CommentUpdated',
+        data:{
+          id:data.id,
+          body:data.body,
+          postId : data.postId,
+          status : data.status
+        }
+      })
+    }catch(e) {
+      console.log(e.message);
+    }
+  }
   res.send({});
 })
 
