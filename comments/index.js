@@ -71,5 +71,7 @@ app.post('/events',async(req,res) => {
 })
 
 app.listen(4001,() => {
+  console.log("Updated version of comment image");
+  console.log("Update the image version that used by a deployment.");
   console.log("Comments service is running on http://localhost:4001");
 })
